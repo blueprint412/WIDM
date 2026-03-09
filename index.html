@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Wie Is De Mol — Voorspellingen</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;700&family=IBM+Plex+Sans:wght@300;400;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #f5f2eb;
+      --ink: #1a1a18;
+      --faint: #c8c3b8;
+      --muted: #7a7568;
+      --correct: #2d6a4f;
+      --wrong: #9b2335;
+      --pending: #6b5e2f;
+      --accent: #c8a84b;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: 16px;
+    }
+
+    body {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 60px 24px 120px;
+    }
+
+    /* ── Header ── */
+    header {
+      border-bottom: 2px solid var(--ink);
+      padding-bottom: 28px;
+      margin-bottom: 48px;
+    }
+
+    .site-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+
+    h1 {
+      font-size: clamp(28px, 6vw, 42px);
+      font-weight: 600;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+    }
+
+    .tagline {
+      margin-top: 10px;
+      font-size: 14px;
+      color: var(--muted);
+      font-weight: 300;
+      line-height: 1.6;
+      max-width: 480px;
+    }
+
+    /* ── Streak ── */
+    .streak-block {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+      margin-bottom: 48px;
+      padding: 20px 24px;
+      border: 1px solid var(--faint);
+      background: #fff;
+    }
+
+    .streak-number {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 52px;
+      font-weight: 700;
+      line-height: 1;
+      color: var(--ink);
+    }
+
+    .streak-label {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .streak-label strong {
+      display: block;
+      font-size: 16px;
+      color: var(--ink);
+      font-weight: 600;
+    }
+
+    /* ── Predictions list ── */
+    .predictions {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .year-entry {
+      border-top: 1px solid var(--faint);
+      padding: 24px 0;
+      display: grid;
+      grid-template-columns: 72px 1fr auto;
+      gap: 16px;
+      align-items: start;
+      animation: fadeIn 0.4s ease both;
+    }
+
+    .year-entry:last-child {
+      border-bottom: 1px solid var(--faint);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .year-col {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--muted);
+      padding-top: 2px;
+    }
+
+    .entry-body {}
+
+    .prediction-name {
+      font-size: 20px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      margin-bottom: 4px;
+    }
+
+    .meta {
+      font-size: 12px;
+      color: var(--muted);
+      font-family: 'IBM Plex Mono', monospace;
+      line-height: 1.8;
+    }
+
+    .meta-row {
+      display: flex;
+      gap: 6px;
+    }
+
+    .meta-key {
+      opacity: 0.6;
+    }
+
+    .result-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      white-space: nowrap;
+      margin-top: 2px;
+    }
+
+    .result-badge.correct {
+      background: #e8f5ef;
+      color: var(--correct);
+      border: 1px solid #a8d5bc;
+    }
+
+    .result-badge.wrong {
+      background: #faeaec;
+      color: var(--wrong);
+      border: 1px solid #e8b0b8;
+    }
+
+    .result-badge.pending {
+      background: #f5f0e0;
+      color: var(--pending);
+      border: 1px solid #d4c480;
+    }
+
+    .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    .correct .dot { background: var(--correct); }
+    .wrong   .dot { background: var(--wrong); }
+    .pending .dot { background: var(--accent); }
+
+    .actual-mole {
+      margin-top: 8px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .actual-mole span {
+      color: var(--ink);
+      font-weight: 600;
+    }
+
+    /* ── Hash block ── */
+    .hash-row {
+      margin-top: 6px;
+    }
+
+    .hash-value {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      color: var(--faint);
+      word-break: break-all;
+      transition: color 0.2s;
+      cursor: default;
+    }
+
+    .hash-value:hover {
+      color: var(--muted);
+    }
+
+    /* ── Footer / Verifiability note ── */
+    .verify-section {
+      margin-top: 64px;
+      padding-top: 28px;
+      border-top: 1px solid var(--faint);
+    }
+
+    .verify-section h2 {
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      margin-bottom: 14px;
+      font-family: 'IBM Plex Mono', monospace;
+    }
+
+    .verify-section p {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.7;
+      margin-bottom: 10px;
+    }
+
+    .verify-section a {
+      color: var(--ink);
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+    }
+
+    footer {
+      margin-top: 48px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      color: var(--faint);
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="site-label">Persoonlijk archief</div>
+    <h1>Wie Is De Mol<br>Voorspellingen</h1>
+    <p class="tagline">
+      Elke voorspelling wordt gepubliceerd op de ochtend van de finale-uitzending.
+      Tijdstempel en inhoud zijn onwijzigbaar vastgelegd via Git-commits op GitHub.
+    </p>
+  </header>
+
+  <!-- Streak -->
+  <div class="streak-block">
+    <div class="streak-number" id="streak-count">—</div>
+    <div class="streak-label">
+      <strong>Huidige reeks</strong>
+      opeenvolgende juiste voorspellingen
+    </div>
+  </div>
+
+  <!-- Predictions -->
+  <div class="predictions" id="predictions-list">
+    <!-- Dynamically rendered by JS -->
+  </div>
+
+  <!-- Verifiability note -->
+  <div class="verify-section">
+    <h2>Hoe werkt de verificatie?</h2>
+    <p>
+      Deze website staat op <strong>GitHub Pages</strong>. Elke nieuwe voorspelling
+      wordt toegevoegd via een Git-commit. De commit-timestamp is publiek zichtbaar
+      en kan niet achteraf worden aangepast zonder dat dit zichtbaar is in de history.
+    </p>
+    <p>
+      Bovendien bevat elke voorspelling een <strong>SHA-256 hash</strong> van de tekst
+      <code>JAAR|NAAM|DATUM</code>. Die hash kun je zelf narekenen om te controleren
+      dat de gegevens niet zijn gewijzigd.
+    </p>
+    <p>
+      Commit-history: <a href="https://github.com/JOUW-GEBRUIKERSNAAM/wie-is-de-mol/commits/main" target="_blank">github.com/…/commits/main</a>
+    </p>
+  </div>
+
+  <footer>
+    <p>Bijgehouden sinds 2024 &mdash; alle tijden zijn CET</p>
+  </footer>
+
+  <script>
+    // ═══════════════════════════════════════════════════════
+    //  DATA — voeg hier elk jaar een nieuw object toe
+    //  Velden:
+    //    year      : number
+    //    prediction: string  — jouw voorspelling (naam)
+    //    timestamp : string  — ISO 8601, ochtend van de finale
+    //    result    : "correct" | "wrong" | "pending"
+    //    actualMole: string | null  — pas invullen ná afloop
+    //    hash      : string  — SHA-256 van "YEAR|prediction|timestamp"
+    //                          genereer met de knop onderaan, of via:
+    //                          echo -n "2025|Naam|2025-01-31T09:15:00" | sha256sum
+    // ═══════════════════════════════════════════════════════
+    const predictions = [
+      {
+        year: 2025,
+        prediction: "Naam Kandidaat",
+        timestamp: "2025-01-31T09:15:00+01:00",
+        result: "pending",        // verander naar "correct" of "wrong" na afloop
+        actualMole: null,         // bijv. "Echte Mol Naam"
+        hash: "—"                 // genereer met knop hieronder
+      },
+
+      // Voorbeeld van een afgerond jaar:
+      // {
+      //   year: 2024,
+      //   prediction: "Eerste Kandidaat",
+      //   timestamp: "2024-02-02T08:47:00+01:00",
+      //   result: "correct",
+      //   actualMole: "Eerste Kandidaat",
+      //   hash: "a3f9b2c1d4e5..."
+      // },
+    ];
+
+    // ═══════════════════════════════════════════════════════
+    //  RENDER
+    // ═══════════════════════════════════════════════════════
+    function formatTimestamp(iso) {
+      const d = new Date(iso);
+      const date = d.toLocaleDateString('nl-NL', { day: '2-digit', month: 'long', year: 'numeric' });
+      const time = d.toLocaleTimeString('nl-NL', { hour: '2-digit', minute: '2-digit' });
+      return `${date} om ${time}`;
+    }
+
+    function badgeHTML(result) {
+      const labels = { correct: 'Juist', wrong: 'Fout', pending: 'Afwachten' };
+      return `<span class="result-badge ${result}"><span class="dot"></span>${labels[result]}</span>`;
+    }
+
+    function renderPredictions() {
+      const container = document.getElementById('predictions-list');
+      const sorted = [...predictions].sort((a, b) => b.year - a.year);
+
+      container.innerHTML = sorted.map((p, i) => `
+        <div class="year-entry" style="animation-delay:${i * 60}ms">
+          <div class="year-col">${p.year}</div>
+          <div class="entry-body">
+            <div class="prediction-name">${p.prediction}</div>
+            <div class="meta">
+              <div class="meta-row">
+                <span class="meta-key">gepubliceerd</span>
+                <span>${formatTimestamp(p.timestamp)}</span>
+              </div>
+              <div class="hash-row">
+                <span class="meta-key" style="font-size:10px">sha256&nbsp;</span>
+                <span class="hash-value" title="SHA-256 van JAAR|naam|timestamp">${p.hash}</span>
+              </div>
+            </div>
+            ${p.result !== 'pending' && p.actualMole ? `
+              <div class="actual-mole">De mol was: <span>${p.actualMole}</span></div>
+            ` : ''}
+          </div>
+          <div>${badgeHTML(p.result)}</div>
+        </div>
+      `).join('');
+    }
+
+    function calcStreak() {
+      const finished = predictions
+        .filter(p => p.result !== 'pending')
+        .sort((a, b) => b.year - a.year);
+
+      let streak = 0;
+      for (const p of finished) {
+        if (p.result === 'correct') streak++;
+        else break;
+      }
+      document.getElementById('streak-count').textContent = streak;
+    }
+
+    renderPredictions();
+    calcStreak();
+
+    // ═══════════════════════════════════════════════════════
+    //  HASH GENERATOR — handig hulpje om hashes te genereren
+    //  Verwijder dit blok als je de site publiceert (optioneel)
+    // ═══════════════════════════════════════════════════════
+    async function generateHash(year, name, timestamp) {
+      const input = `${year}|${name}|${timestamp}`;
+      const buf   = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(input));
+      return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+    }
+
+    // Uncomment om een hash te genereren via de browser-console:
+    // generateHash(2025, "Naam Kandidaat", "2025-01-31T09:15:00+01:00").then(console.log);
+  </script>
+
+</body>
+</html>
