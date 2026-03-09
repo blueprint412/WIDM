@@ -18,11 +18,7 @@
       --accent: #c8a84b;
     }
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
     html {
       background: var(--bg);
@@ -37,7 +33,6 @@
       padding: 60px 24px 120px;
     }
 
-    /* ── Header ── */
     header {
       border-bottom: 2px solid var(--ink);
       padding-bottom: 28px;
@@ -69,7 +64,6 @@
       max-width: 480px;
     }
 
-    /* ── Streak ── */
     .streak-block {
       display: flex;
       align-items: baseline;
@@ -85,57 +79,61 @@
       font-size: 52px;
       font-weight: 700;
       line-height: 1;
-      color: var(--ink);
     }
 
-    .streak-label {
-      font-size: 13px;
-      color: var(--muted);
-      line-height: 1.5;
-    }
+    .streak-label { font-size: 13px; color: var(--muted); line-height: 1.5; }
+    .streak-label strong { display: block; font-size: 16px; color: var(--ink); font-weight: 600; }
 
-    .streak-label strong {
-      display: block;
-      font-size: 16px;
-      color: var(--ink);
-      font-weight: 600;
-    }
-
-    /* ── Predictions list ── */
-    .predictions {
-      display: flex;
-      flex-direction: column;
-      gap: 0;
-    }
-
-    .year-entry {
-      border-top: 1px solid var(--faint);
-      padding: 24px 0;
-      display: grid;
-      grid-template-columns: 72px 1fr auto;
-      gap: 16px;
-      align-items: start;
+    .season-block {
+      border: 1px solid var(--faint);
+      background: #fff;
+      margin-bottom: 16px;
       animation: fadeIn 0.4s ease both;
     }
 
-    .year-entry:last-child {
+    .season-header {
+      display: flex;
+      align-items: baseline;
+      gap: 16px;
+      padding: 18px 24px;
       border-bottom: 1px solid var(--faint);
+      background: var(--ink);
     }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(8px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    .year-col {
+    .season-year {
       font-family: 'IBM Plex Mono', monospace;
       font-size: 13px;
       font-weight: 700;
-      color: var(--muted);
-      padding-top: 2px;
+      color: rgba(255,255,255,0.5);
     }
 
-    .entry-body {}
+    .season-title {
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+      color: #fff;
+    }
+
+    .prediction-row {
+      display: grid;
+      grid-template-columns: 80px 1fr auto;
+      gap: 16px;
+      align-items: start;
+      padding: 20px 24px;
+      border-bottom: 1px solid #f0ece3;
+    }
+
+    .prediction-row:last-child { border-bottom: none; }
+
+    .row-type {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      padding-top: 4px;
+      line-height: 1.4;
+    }
 
     .prediction-name {
       font-size: 20px;
@@ -144,21 +142,31 @@
       margin-bottom: 4px;
     }
 
+    .prediction-name.empty {
+      font-size: 15px;
+      font-weight: 400;
+      font-style: italic;
+      color: var(--faint);
+    }
+
     .meta {
       font-size: 12px;
       color: var(--muted);
       font-family: 'IBM Plex Mono', monospace;
       line-height: 1.8;
+      margin-top: 2px;
     }
 
-    .meta-row {
-      display: flex;
-      gap: 6px;
+    .hash-value {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      color: var(--faint);
+      word-break: break-all;
+      cursor: default;
+      transition: color 0.2s;
     }
 
-    .meta-key {
-      opacity: 0.6;
-    }
+    .hash-value:hover { color: var(--muted); }
 
     .result-badge {
       display: inline-flex;
@@ -171,68 +179,25 @@
       letter-spacing: 0.06em;
       text-transform: uppercase;
       white-space: nowrap;
-      margin-top: 2px;
     }
 
-    .result-badge.correct {
-      background: #e8f5ef;
-      color: var(--correct);
-      border: 1px solid #a8d5bc;
-    }
+    .result-badge.correct { background: #e8f5ef; color: var(--correct); border: 1px solid #a8d5bc; }
+    .result-badge.wrong   { background: #faeaec; color: var(--wrong);   border: 1px solid #e8b0b8; }
+    .result-badge.pending { background: #f5f0e0; color: var(--pending); border: 1px solid #d4c480; }
 
-    .result-badge.wrong {
-      background: #faeaec;
-      color: var(--wrong);
-      border: 1px solid #e8b0b8;
-    }
-
-    .result-badge.pending {
-      background: #f5f0e0;
-      color: var(--pending);
-      border: 1px solid #d4c480;
-    }
-
-    .dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      display: inline-block;
-    }
-
+    .dot { width: 6px; height: 6px; border-radius: 50%; display: inline-block; }
     .correct .dot { background: var(--correct); }
     .wrong   .dot { background: var(--wrong); }
     .pending .dot { background: var(--accent); }
 
-    .actual-mole {
-      margin-top: 8px;
-      font-size: 12px;
-      color: var(--muted);
+    .actual-answer { margin-top: 6px; font-size: 12px; color: var(--muted); }
+    .actual-answer span { color: var(--ink); font-weight: 600; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
     }
 
-    .actual-mole span {
-      color: var(--ink);
-      font-weight: 600;
-    }
-
-    /* ── Hash block ── */
-    .hash-row {
-      margin-top: 6px;
-    }
-
-    .hash-value {
-      font-family: 'IBM Plex Mono', monospace;
-      font-size: 10px;
-      color: var(--faint);
-      word-break: break-all;
-      transition: color 0.2s;
-      cursor: default;
-    }
-
-    .hash-value:hover {
-      color: var(--muted);
-    }
-
-    /* ── Footer / Verifiability note ── */
     .verify-section {
       margin-top: 64px;
       padding-top: 28px;
@@ -248,25 +213,10 @@
       font-family: 'IBM Plex Mono', monospace;
     }
 
-    .verify-section p {
-      font-size: 14px;
-      color: var(--muted);
-      line-height: 1.7;
-      margin-bottom: 10px;
-    }
+    .verify-section p { font-size: 14px; color: var(--muted); line-height: 1.7; margin-bottom: 10px; }
+    .verify-section a { color: var(--ink); font-family: 'IBM Plex Mono', monospace; font-size: 12px; }
 
-    .verify-section a {
-      color: var(--ink);
-      font-family: 'IBM Plex Mono', monospace;
-      font-size: 12px;
-    }
-
-    footer {
-      margin-top: 48px;
-      font-family: 'IBM Plex Mono', monospace;
-      font-size: 11px;
-      color: var(--faint);
-    }
+    footer { margin-top: 48px; font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--faint); }
   </style>
 </head>
 <body>
@@ -280,21 +230,16 @@
     </p>
   </header>
 
-  <!-- Streak -->
   <div class="streak-block">
     <div class="streak-number" id="streak-count">—</div>
     <div class="streak-label">
       <strong>Huidige reeks</strong>
-      opeenvolgende juiste voorspellingen
+      opeenvolgende juiste voorspellingen (de mol)
     </div>
   </div>
 
-  <!-- Predictions -->
-  <div class="predictions" id="predictions-list">
-    <!-- Dynamically rendered by JS -->
-  </div>
+  <div id="seasons-list"></div>
 
-  <!-- Verifiability note -->
   <div class="verify-section">
     <h2>Hoe werkt de verificatie?</h2>
     <p>
@@ -304,56 +249,55 @@
     </p>
     <p>
       Bovendien bevat elke voorspelling een <strong>SHA-256 hash</strong> van de tekst
-      <code>JAAR|NAAM|DATUM</code>. Die hash kun je zelf narekenen om te controleren
+      <code>JAAR|TYPE|NAAM|DATUM</code>. Die hash kun je zelf narekenen om te controleren
       dat de gegevens niet zijn gewijzigd.
     </p>
     <p>
-      Commit-history: <a href="https://github.com/JOUW-GEBRUIKERSNAAM/wie-is-de-mol/commits/main" target="_blank">github.com/…/commits/main</a>
+      Commit-history: <a href="https://github.com/blueprint412/WIDM/commits/main" target="_blank">github.com/blueprint412/WIDM/commits/main</a>
     </p>
   </div>
 
-  <footer>
-    <p>Bijgehouden sinds 2024 &mdash; alle tijden zijn CET</p>
-  </footer>
+  <footer><p>Bijgehouden sinds 2026 &mdash; alle tijden zijn CET</p></footer>
 
   <script>
     // ═══════════════════════════════════════════════════════
-    //  DATA — voeg hier elk jaar een nieuw object toe
-    //  Velden:
-    //    year      : number
-    //    prediction: string  — jouw voorspelling (naam)
-    //    timestamp : string  — ISO 8601, ochtend van de finale
-    //    result    : "correct" | "wrong" | "pending"
-    //    actualMole: string | null  — pas invullen ná afloop
-    //    hash      : string  — SHA-256 van "YEAR|prediction|timestamp"
-    //                          genereer met de knop onderaan, of via:
-    //                          echo -n "2025|Naam|2025-01-31T09:15:00" | sha256sum
+    //  DATA — voeg elk jaar een nieuw object toe aan seasons[]
+    //
+    //  Op de ochtend van de finale:
+    //  1. Vul name en timestamp in
+    //  2. Genereer hash via console:
+    //     generateHash(2026, "mol", "Naam", "2026-02-06T09:00:00+01:00").then(console.log)
+    //  3. Commit & push → timestamp op GitHub is het bewijs
+    //
+    //  Na de finale:
+    //  4. Zet result naar "correct" of "wrong"
+    //  5. Vul actualAnswer in
     // ═══════════════════════════════════════════════════════
-    const predictions = [
+    const seasons = [
       {
-        year: 2025,
-        prediction: "Naam Kandidaat",
-        timestamp: "2025-01-31T09:15:00+01:00",
-        result: "pending",        // verander naar "correct" of "wrong" na afloop
-        actualMole: null,         // bijv. "Echte Mol Naam"
-        hash: "—"                 // genereer met knop hieronder
+        year: 2026,
+        mol: {
+          name: null,
+          timestamp: null,
+          result: "pending",
+          actualAnswer: null,
+          hash: null
+        },
+        winnaar: {
+          name: null,
+          timestamp: null,
+          result: "pending",
+          actualAnswer: null,
+          hash: null
+        }
       },
-
-      // Voorbeeld van een afgerond jaar:
-      // {
-      //   year: 2024,
-      //   prediction: "Eerste Kandidaat",
-      //   timestamp: "2024-02-02T08:47:00+01:00",
-      //   result: "correct",
-      //   actualMole: "Eerste Kandidaat",
-      //   hash: "a3f9b2c1d4e5..."
-      // },
     ];
 
     // ═══════════════════════════════════════════════════════
     //  RENDER
     // ═══════════════════════════════════════════════════════
     function formatTimestamp(iso) {
+      if (!iso) return null;
       const d = new Date(iso);
       const date = d.toLocaleDateString('nl-NL', { day: '2-digit', month: 'long', year: 'numeric' });
       const time = d.toLocaleTimeString('nl-NL', { hour: '2-digit', minute: '2-digit' });
@@ -365,62 +309,67 @@
       return `<span class="result-badge ${result}"><span class="dot"></span>${labels[result]}</span>`;
     }
 
-    function renderPredictions() {
-      const container = document.getElementById('predictions-list');
-      const sorted = [...predictions].sort((a, b) => b.year - a.year);
+    function predictionRowHTML(typeLabel, p) {
+      const nameHTML = p.name
+        ? `<div class="prediction-name">${p.name}</div>`
+        : `<div class="prediction-name empty">Nog niet ingevuld</div>`;
 
-      container.innerHTML = sorted.map((p, i) => `
-        <div class="year-entry" style="animation-delay:${i * 60}ms">
-          <div class="year-col">${p.year}</div>
-          <div class="entry-body">
-            <div class="prediction-name">${p.prediction}</div>
-            <div class="meta">
-              <div class="meta-row">
-                <span class="meta-key">gepubliceerd</span>
-                <span>${formatTimestamp(p.timestamp)}</span>
-              </div>
-              <div class="hash-row">
-                <span class="meta-key" style="font-size:10px">sha256&nbsp;</span>
-                <span class="hash-value" title="SHA-256 van JAAR|naam|timestamp">${p.hash}</span>
-              </div>
-            </div>
-            ${p.result !== 'pending' && p.actualMole ? `
-              <div class="actual-mole">De mol was: <span>${p.actualMole}</span></div>
-            ` : ''}
-          </div>
+      const ts = formatTimestamp(p.timestamp);
+      const metaHTML = ts ? `
+        <div class="meta">
+          <div>${ts}</div>
+          ${p.hash ? `<div class="hash-value" title="SHA-256">${p.hash}</div>` : ''}
+        </div>` : '';
+
+      const actualHTML = p.result !== 'pending' && p.actualAnswer
+        ? `<div class="actual-answer">Uitslag: <span>${p.actualAnswer}</span></div>`
+        : '';
+
+      return `
+        <div class="prediction-row">
+          <div class="row-type">${typeLabel}</div>
+          <div>${nameHTML}${metaHTML}${actualHTML}</div>
           <div>${badgeHTML(p.result)}</div>
+        </div>`;
+    }
+
+    function renderSeasons() {
+      const container = document.getElementById('seasons-list');
+      const sorted = [...seasons].sort((a, b) => b.year - a.year);
+      container.innerHTML = sorted.map((s, i) => `
+        <div class="season-block" style="animation-delay:${i * 80}ms">
+          <div class="season-header">
+            <div class="season-year">${s.year}</div>
+            <div class="season-title">Seizoen ${s.year}</div>
+          </div>
+          ${predictionRowHTML('De Mol', s.mol)}
+          ${predictionRowHTML('Winnaar', s.winnaar)}
         </div>
       `).join('');
     }
 
     function calcStreak() {
-      const finished = predictions
-        .filter(p => p.result !== 'pending')
+      const finished = seasons
+        .filter(s => s.mol.result !== 'pending')
         .sort((a, b) => b.year - a.year);
-
       let streak = 0;
-      for (const p of finished) {
-        if (p.result === 'correct') streak++;
+      for (const s of finished) {
+        if (s.mol.result === 'correct') streak++;
         else break;
       }
       document.getElementById('streak-count').textContent = streak;
     }
 
-    renderPredictions();
+    renderSeasons();
     calcStreak();
 
-    // ═══════════════════════════════════════════════════════
-    //  HASH GENERATOR — handig hulpje om hashes te genereren
-    //  Verwijder dit blok als je de site publiceert (optioneel)
-    // ═══════════════════════════════════════════════════════
-    async function generateHash(year, name, timestamp) {
-      const input = `${year}|${name}|${timestamp}`;
-      const buf   = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(input));
+    // Hash generator — gebruik in browser-console:
+    // generateHash(2026, "mol", "Naam Kandidaat", "2026-02-06T09:00:00+01:00").then(console.log)
+    async function generateHash(year, type, name, timestamp) {
+      const input = `${year}|${type}|${name}|${timestamp}`;
+      const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(input));
       return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
     }
-
-    // Uncomment om een hash te genereren via de browser-console:
-    // generateHash(2025, "Naam Kandidaat", "2025-01-31T09:15:00+01:00").then(console.log);
   </script>
 
 </body>
